@@ -45,7 +45,7 @@ namespace FullBarAPI.Mapping
 
             Property(p => p.Foto, p =>
             {
-                p.Type(NHibernateUtil.String);
+                p.Type(NHibernateUtil.BinaryBlob);
                 p.Column("Foto");
                 p.NotNullable(false);
             });

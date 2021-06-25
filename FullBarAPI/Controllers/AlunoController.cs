@@ -114,6 +114,24 @@ namespace FullBarAPI.Controllers
             }
         }
 
+
+        [HttpPut]
+        [Route("foto")]
+        public async Task<ActionResult> AddImageAluno(IFormFile foto, int idAluno)
+        {
+            try
+            {
+                await _alunoService.AssociaFoto(await _alunoService.GetAluno(idAluno),foto);
+
+                return Ok(true);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<ActionResult<Aluno>> UpdateAluno([FromBody] Aluno aluno, int id)
         {

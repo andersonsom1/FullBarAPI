@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace FullBarAPI.Models.Interfaces
         Task CreateAluno(Aluno aluno);
         Task<Aluno> GetAluno(int idaluno);
         Task UpdateAluno(Aluno aluno);
+        Task AssociaFoto(Aluno aluno,IFormFile formeFile);
         Task DeleteAluno(int idaluno);
         Task<IEnumerable<Aluno>> GetAluno();
         Task<IEnumerable<AlunoStatus>> GetStatusAluno(IEnumerable<Aluno> alunos, 

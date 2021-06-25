@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +13,6 @@ namespace FullBarAPI.Models
         public virtual string Nome { get; set; }
         public virtual string RA { get; set; }
         public virtual DateTime? Periodo { get; set; }
-        public virtual string Foto { get; set; }
+        protected internal virtual byte[] Foto { get; set; } = null;
     }
 }

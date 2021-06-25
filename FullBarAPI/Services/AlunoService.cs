@@ -1,10 +1,13 @@
 ﻿using FullBarAPI.Models;
 using FullBarAPI.Models.Interfaces;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static FullBarAPI.Models.AlunoStatus;
+
 
 namespace FullBarAPI.Services
 {
@@ -65,7 +68,7 @@ namespace FullBarAPI.Services
                     {
                         Id = a.Id,
                         Nome = a.Nome,
-                        Foto = a.Foto,
+                        Foto = a.Foto != null ? ConverteFoto(a) : null,
                         Periodo = a.Periodo,
                         RA = a.RA,
                         CursoNome = SetCurso(a.Id, notaAlunos, cursos),
@@ -78,6 +81,23 @@ namespace FullBarAPI.Services
             catch (Exception ex)
             {
                 throw new Exception("Erro no metodo GetStatusAluno " + ex.Message);
+            }
+        }
+
+        private string ConverteFoto(Aluno aluno)
+        {
+            try
+            {
+                string file = $"{AppDomain.CurrentDomain.BaseDirectory}Foto\\{aluno.Nome}{aluno.Id}";
+                FileStream fileStream = new FileStream(file, FileMode.OpenOrCreate);
+                fileStream.Write(aluno.Foto, 0, aluno.Foto.Length);
+                fileStream.Flush();
+                fileStream.Close();
+                return file;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro no metodo ConverteFoto " + ex.Message);
             }
         }
 
@@ -157,6 +177,26 @@ namespace FullBarAPI.Services
             catch (Exception ex)
             {
                 throw new Exception("Erro no metodo DeleteAluno " + ex.Message);
+            }
+        }
+
+        public async Task AssociaFoto(Aluno aluno, IFormFile formeFile)
+        {
+            try
+            {
+                Stream stream = formeFile.OpenReadStream();
+                MemoryStream ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+                ms.TryGetBuffer(out ArraySegment<byte> foto);
+                //ms.Seek(0, SeekOrigin.Begin);
+                stream.Close();
+                aluno.Foto = foto.Array;
+                await _repository.Update(aluno);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro no metodo AssociaFoto " + ex.Message);
             }
         }
     }
