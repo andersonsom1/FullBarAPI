@@ -53,6 +53,33 @@ namespace FullBarAPI.Controllers
             }
         }
 
+        [HttpGet("{idAluno}")]
+        public async Task<ActionResult<AlunoStatus>> GetFilterAlunos(int idAluno)
+        {
+            try
+            {
+                IEnumerable<Aluno> alunos = await _alunoService.GetAluno();
+                IEnumerable<Curso> cursos = await _cursoService.GetCurso();
+                IEnumerable<NotaAluno> notaAlunos = await _notaAlunoService.GetNotaAluno();
+                IEnumerable<Disciplina> disciplinas = await _disciplinaService.GetDisciplina();
+
+
+                IEnumerable<AlunoStatus> alunoStatus = await _alunoService.GetStatusAluno(alunos, notaAlunos, cursos, disciplinas);
+
+                if (idAluno > 0)
+                {
+                    alunoStatus = alunoStatus.Where(x => x.Id.Equals(idAluno));
+                }
+
+                return Ok(alunoStatus);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet]
         [Route("filter")]
         public async Task<ActionResult<AlunoStatus>> GetFilterAlunos(string NomeAluno, string RA, string NomeCurso, string Status)
