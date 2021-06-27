@@ -24,6 +24,9 @@ namespace FullBarAPI.Services
                 IEnumerable<NotaAluno> listnotaAluno = _repository.FindAll(notaAluno).Result;
                 if (!listnotaAluno.Any())
                     await _repository.Add(notaAluno);
+                else
+                    throw new Exception("Nota do aluno " + notaAluno.IdAluno + " já existente " + notaAluno.IdDisciplina);
+
             }
             catch (Exception ex)
             {
