@@ -40,7 +40,7 @@ namespace FullBarAPI.Repository
 
         public async Task<Disciplina> FindById(int id) => await _session.GetAsync<Disciplina>(id);
 
-        public Task<IEnumerable<Disciplina>> FindAll() => Task.FromResult((IEnumerable<Disciplina>)_session.Query<Disciplina>().ToList());
+        public Task<IEnumerable<Disciplina>> FindAll(Disciplina disciplina = null) => Task.FromResult((IEnumerable<Disciplina>)_session.Query<Disciplina>().ToList());
 
 
         public Task Remove(int id)
@@ -49,6 +49,11 @@ namespace FullBarAPI.Repository
         }
 
         public Task Update(Disciplina item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Disciplina> FindByDisciplinaAluno(int idDisciplina, int idAluno)
         {
             throw new NotImplementedException();
         }

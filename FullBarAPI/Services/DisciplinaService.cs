@@ -41,6 +41,19 @@ namespace FullBarAPI.Services
             }
         }
 
+        public async Task<Disciplina> GetDisciplinaById(int idDisciplina)
+        {
+            try
+            {
+                return await _repository.FindById(idDisciplina);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro no metodo GetDisciplinaById " + ex.Message);
+            }
+
+        }
+
         public async Task<IEnumerable<NomeDisciplina>> GetNomeDisciplina()
         {
             try

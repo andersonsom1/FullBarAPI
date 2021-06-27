@@ -94,7 +94,7 @@ namespace FullBarAPI.Controllers
 
                 IEnumerable<AlunoStatus> alunoStatus = await _alunoService.GetStatusAluno(alunos, notaAlunos, cursos, disciplinas);
 
-                if(!String.IsNullOrEmpty(NomeAluno))
+                if (!String.IsNullOrEmpty(NomeAluno))
                 {
                     alunoStatus = alunoStatus.Where(x => x.Nome.ToUpper().Contains(NomeAluno.ToUpper()));
                 }
@@ -110,7 +110,7 @@ namespace FullBarAPI.Controllers
                 if (!String.IsNullOrEmpty(Status))
                 {
                     alunoStatus.ToList().ForEach(x =>
-                    {                      
+                    {
                         x.notaAlunoDisciplinas = x.notaAlunoDisciplinas.Where(w => !String.IsNullOrEmpty(w.Status) && w.Status.ToUpper().Contains(Status.ToUpper()));
                     });
 
@@ -141,14 +141,66 @@ namespace FullBarAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("nota")]
+        public async Task<ActionResult> CreateNotaAluno([FromBody] NotaAluno notaAluno)
+        {
+            try
+            {
+
+                Aluno aluno = await _alunoService.GetAluno(notaAluno.IdAluno);
+                Disciplina disciplina = await _disciplinaService.GetDisciplinaById(notaAluno.IdDisciplina);
+
+                if (aluno != null && disciplina != null)
+                {
+                    notaAluno.IdCurso = disciplina.IdCurso;
+                    await _notaAlunoService.CreateNotaAluno(notaAluno);
+                    return Ok(true);
+                }
+                else
+                {
+                    return NoContent();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
 
         [HttpPut]
-        [Route("foto")]
+        [Route("nota")]
+        public async Task<ActionResult> UpdateNotaAluno([FromBody] NotaAluno notaAluno)
+        {
+            try
+            {
+                Aluno aluno = await _alunoService.GetAluno(notaAluno.IdAluno);
+                Disciplina disciplina = await _disciplinaService.GetDisciplinaById(notaAluno.IdDisciplina);
+
+                if (aluno != null && disciplina != null)
+                {
+
+                    await _notaAlunoService.UpdteNotaAluno(notaAluno);
+                    return Ok(true);
+                }
+                else
+                {
+                    return NotFound(aluno + "\n" + disciplina);
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("api/foto/{idAluno}")]
         public async Task<ActionResult> AddImageAluno(IFormFile foto, int idAluno)
         {
             try
             {
-                await _alunoService.AssociaFoto(await _alunoService.GetAluno(idAluno),foto);
+                await _alunoService.AssociaFoto(await _alunoService.GetAluno(idAluno), foto);
 
                 return Ok(true);
 
@@ -159,22 +211,22 @@ namespace FullBarAPI.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Aluno>> UpdateAluno([FromBody] Aluno aluno, int id)
+        [HttpPut("{idAluno}")]
+        public async Task<ActionResult<Aluno>> UpdateAluno([FromBody] Aluno aluno, int idAluno)
         {
             try
             {
-                Aluno exist = await _alunoService.GetAluno(id);
+                Aluno exist = await _alunoService.GetAluno(idAluno);
 
                 if (exist != null)
                 {
-                    aluno.Id = id;
+                    aluno.Id = idAluno;
                     await _alunoService.UpdateAluno(aluno);
-                    return Ok(await _alunoService.GetAluno(id));
+                    return Ok(await _alunoService.GetAluno(idAluno));
                 }
                 else
                 {
-                    aluno.Id = id;
+                    aluno.Id = idAluno;
                     return NotFound(aluno);
                 }
             }
@@ -184,6 +236,7 @@ namespace FullBarAPI.Controllers
             }
 
         }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult<Aluno>> DeleteAluno(int id)
         {

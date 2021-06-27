@@ -8,6 +8,8 @@ namespace FullBarAPI.Models.Interfaces
     public interface INotaAlunoService
     {
         Task CreateNotaAluno(NotaAluno aluno);
+        Task<NotaAluno> FindById(int idNotaAluno);
+        Task UpdteNotaAluno(NotaAluno aluno);
         Task<IEnumerable<NotaAluno>> GetNotaAluno();
     }
 }

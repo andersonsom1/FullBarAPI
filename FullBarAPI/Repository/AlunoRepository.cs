@@ -40,7 +40,7 @@ namespace FullBarAPI.Repository
 
         public async Task<Aluno> FindById(int id) => await _session.GetAsync<Aluno>(id);
 
-        public Task<IEnumerable<Aluno>> FindAll() => Task.FromResult((IEnumerable<Aluno>)_session.Query<Aluno>().ToList());
+        public Task<IEnumerable<Aluno>> FindAll(Aluno aluno = null) => Task.FromResult((IEnumerable<Aluno>)_session.Query<Aluno>().ToList());
 
         //public Task<IEnumerable<AlunoCurso>> FindAllAlunoCurso() => Task.FromResult((IEnumerable<AlunoCurso>)_session.Query<AlunoCurso>().ToList());
 

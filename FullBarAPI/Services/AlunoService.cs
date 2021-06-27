@@ -107,19 +107,17 @@ namespace FullBarAPI.Services
 
             try
             {
-                if (notaAlunos.Any(a => a.IdAluno.Equals(idaluno)))
+                notaAlunos.Where(x => x.IdAluno.Equals(idaluno)).ToList().ForEach(na =>
                 {
-                    notaAlunos.ToList().ForEach(na =>
+                    listnotaalunodisciplina.Add(new NotaAlunoDisciplina()
                     {
-                        listnotaalunodisciplina.Add(new NotaAlunoDisciplina()
-                        {
-                            IdDisciplina = na.IdDisciplina,
-                            NomeDisciplina = disciplinas.FirstOrDefault(d => d.Id.Equals(na.IdDisciplina)).NomeDisciplina,
-                            AlunoNotaDisciplina = na.Notaaluno,
-                            Status = na.Notaaluno > disciplinas.FirstOrDefault(d => d.Id.Equals(na.IdDisciplina)).NotaMinimaAprovacao ? "Aprovado" : "Reprovado",
-                        });
+                        IdDisciplina = na.IdDisciplina,
+                        NomeDisciplina = disciplinas.FirstOrDefault(d => d.Id.Equals(na.IdDisciplina)).NomeDisciplina,
+                        AlunoNotaDisciplina = na.Notaaluno,
+                        Status = na.Notaaluno > disciplinas.FirstOrDefault(d => d.Id.Equals(na.IdDisciplina)).NotaMinimaAprovacao ? "Aprovado" : "Reprovado",
                     });
-                }
+                });
+
                 return listnotaalunodisciplina;
 
             }

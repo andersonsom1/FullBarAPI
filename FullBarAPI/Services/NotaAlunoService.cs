@@ -1,5 +1,6 @@
 ﻿using FullBarAPI.Models;
 using FullBarAPI.Models.Interfaces;
+using FullBarAPI.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +17,29 @@ namespace FullBarAPI.Services
             _repository = repository;
         }
 
-        public async Task CreateNotaAluno(NotaAluno notaaluno)
+        public async Task CreateNotaAluno(NotaAluno notaAluno)
         {
             try
             {
-                await _repository.Add(notaaluno);
+                IEnumerable<NotaAluno> listnotaAluno = _repository.FindAll(notaAluno).Result;
+                if (!listnotaAluno.Any())
+                    await _repository.Add(notaAluno);
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro no metodo CreateNotaAluno " + ex.Message);
+            }
+        }
+
+        public async Task<NotaAluno> FindById(int idNotaAluno)
+        {
+            try
+            {
+                return await _repository.FindById(idNotaAluno);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro no metodo FindById " + ex.Message);
             }
         }
 
@@ -37,6 +52,21 @@ namespace FullBarAPI.Services
             catch (Exception ex)
             {
                 throw new Exception("Erro no metodo GetNotaAluno " + ex.Message);
+            }
+        }
+
+        public async Task UpdteNotaAluno(NotaAluno notaAluno)
+        {
+            try
+            {
+                IEnumerable<NotaAluno> listnotaAluno = _repository.FindAll(notaAluno).Result;
+                listnotaAluno.FirstOrDefault(x => x.IdDisciplina.Equals(notaAluno.IdDisciplina) &&
+                x.IdAluno.Equals(notaAluno.IdAluno)).Notaaluno = notaAluno.Notaaluno;
+                await _repository.Update(listnotaAluno.FirstOrDefault());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro no metodo UpdteNotaAluno " + ex.Message);
             }
         }
     }

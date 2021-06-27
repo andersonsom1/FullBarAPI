@@ -10,6 +10,7 @@ namespace FullBarAPI.Models.Interfaces
     {
         Task CreateDisciplina(Disciplina curso);
         Task<IEnumerable<Disciplina>> GetDisciplina();
+        Task<Disciplina> GetDisciplinaById(int idDisciplina);
         Task<IEnumerable<NomeDisciplina>> GetNomeDisciplina();
     }
 }
